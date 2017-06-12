@@ -228,6 +228,8 @@ public class Login extends AppCompatActivity implements View.OnClickListener, Go
             onAuthSuccess(mAuth.getCurrentUser());
         }
 
+        //Firebase
+        mAuth.addAuthStateListener(mAuthListener);
         //google
         OptionalPendingResult<GoogleSignInResult> opr = Auth.GoogleSignInApi.silentSignIn(mGoogleApiClient);
         if (opr.isDone()) {
