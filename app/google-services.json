@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "283819781731",
+    "firebase_url": "https://mychat-25b37.firebaseio.com",
+    "project_id": "mychat-25b37",
+    "storage_bucket": "mychat-25b37.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:283819781731:android:f1ae4852e98b936d",
+        "android_client_info": {
+          "package_name": "br.com.memorygame.mychat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "283819781731-ha6rj91nsr1t5om4e3k4ms8bk2is9uac.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "br.com.memorygame.mychat",
+            "certificate_hash": "f46354f0fc00e9911078b76476875b42f42c3885"
+          }
+        },
+        {
+          "client_id": "283819781731-t2jm68g3eh48kd2bls5sud1vdmp76dr8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDnjoEz43HN8tqYS1jDf7M9deNhhjdXLdQ"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "283819781731-t2jm68g3eh48kd2bls5sud1vdmp76dr8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
