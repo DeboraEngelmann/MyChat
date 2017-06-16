@@ -29,8 +29,8 @@
             <!--android:focusableInTouchMode="true" />-->
 
             <ImageView
-                android:layout_width="150px"
-                android:layout_height="150px"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="30dp"
                 android:contentDescription=""
@@ -83,7 +83,7 @@
                     android:background="@color/colorAccent"
                     android:text="@string/btn_link_to_register"
                     android:textAllCaps="false"
-                    android:textColor="@android:color/white"
+                    android:textColor="@color/colorPrimaryText"
                     tools:ignore="ButtonStyle" />
 
                 <!-- Login Button -->
@@ -96,7 +96,7 @@
                     android:layout_weight="1"
                     android:background="@color/colorAccent"
                     android:text="@string/btn_login"
-                    android:textColor="@android:color/white"
+                    android:textColor="@color/colorPrimaryText"
                     tools:ignore="ButtonStyle" />
 
             </LinearLayout>
