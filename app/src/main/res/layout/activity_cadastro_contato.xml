@@ -29,13 +29,13 @@ tools:context="br.com.memorygame.mychat.CadastroContato">
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:hint="@string/cadastro_de_jogador"
             android:inputType="textPersonName"
             android:maxLines="1"
             android:textColor="@android:color/background_light"
             android:textColorHighlight="@android:color/background_light"
             android:textColorHint="@android:color/background_light"
             android:textColorLink="@android:color/background_light" />
+        <!--android:hint="@string/cadastro_de_jogador"-->
     </android.support.v7.widget.Toolbar>
 </LinearLayout>
 
@@ -62,8 +62,8 @@ tools:context="br.com.memorygame.mychat.CadastroContato">
                 android:layout_gravity="center_vertical"
                 android:layout_marginRight="12dp"
                 android:contentDescription=""
-                android:src="@drawable/ic_person_black_24dp"
                 tools:ignore="ContentDescription,RtlHardcoded" />
+            <!--android:src="@drawable/ic_person_black_24dp"-->
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
@@ -93,8 +93,8 @@ tools:context="br.com.memorygame.mychat.CadastroContato">
                 android:layout_gravity="center_vertical"
                 android:layout_marginRight="12dp"
                 android:contentDescription=""
-                android:src="@drawable/ic_email_black_24dp"
                 tools:ignore="ContentDescription,RtlHardcoded" />
+            <!--android:src="@drawable/ic_email_black_24dp"-->
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
