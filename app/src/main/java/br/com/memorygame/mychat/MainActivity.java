@@ -1,27 +1,36 @@
 package br.com.memorygame.mychat;
 
+import android.Manifest;
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.ContentResolver;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
-import android.view.View;
-import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.ArrayList;
+
 import br.com.memorygame.mychat.fragmentos.TabFragment;
+import br.com.memorygame.mychat.models.Contato;
 
 public class MainActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
@@ -29,6 +38,9 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     private FragmentManager FM;
     private FragmentTransaction FT;
+    private static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 10;
+    private static ArrayList<Contato> contatosArrayList = new ArrayList<>();
+    private ProgressDialog mProgressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,13 +116,108 @@ public class MainActivity extends AppCompatActivity {
     public void onStart() {
         super.onStart();
         mAuth.addAuthStateListener(mAuthListener);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_CONTACTS}, MY_PERMISSIONS_REQUEST_READ_CONTACTS);
+            Log.i(TAG, "Pediu permissão ao usuário");
+            return;
+        } else {
+            //Ler os contatos
+            getNameEmailDetails();
+
+            Log.i(TAG, "Já tem permissão ao usuário");
+        }
     }
+
+    //pega o retorno da mensagem de permissão e se o usuário não consedeu permissão avisa que não vai conseguir prosseguir
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_READ_CONTACTS:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
+                        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_CONTACTS}, MY_PERMISSIONS_REQUEST_READ_CONTACTS);
+                        return;
+                    }else{
+                        //Ler Contatos
+                        getNameEmailDetails();
+                    }
+                } else {
+                    if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
+                        new AlertDialog.Builder(this).
+                                setTitle("Permissão para acessar os seus contatos").
+                                setMessage("Você precisa conceder permissão para acessar os seus contatos." +
+                                        "Concedendo esse acesso você poderá conversar no chat com seus amigos!").show();
+                    } else {
+                        new AlertDialog.Builder(this).
+                                setTitle("Permissão de acesso aos contatos não concedida").
+                                setMessage("Infelizmente não será possivel conversar com seus contatos").show();
+                    }
+                }
+                break;
+        }
+    }
+
 
     @Override
     public void onStop() {
         super.onStop();
         if (mAuthListener != null) {
             mAuth.removeAuthStateListener(mAuthListener);
+        }
+    }
+
+    public void getNameEmailDetails(){
+        if (contatosArrayList.size()==0) {
+            showProgressDialog();
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    ContentResolver cr = getContentResolver();
+                    Cursor cur = cr.query(ContactsContract.Contacts.CONTENT_URI, null, null, null, null);
+                    if (cur.getCount() > 0) {
+                        while (cur.moveToNext()) {
+                            String id = cur.getString(cur.getColumnIndex(ContactsContract.Contacts._ID));
+                            Cursor cur1 = cr.query(
+                                    ContactsContract.CommonDataKinds.Email.CONTENT_URI, null,null,null, null);
+                            while (cur1.moveToNext()) {
+                                //to get the contact names
+                                String name = cur1.getString(cur1.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
+//                                Log.e("Name :", name);
+                                String email = cur1.getString(cur1.getColumnIndex(ContactsContract.CommonDataKinds.Email.DATA));
+//                                Log.e("Email", email);
+                                if (email != null) {
+                                    Contato contato = new Contato();
+                                    contato.setUid(id);
+                                    contato.setNome(name);
+                                    contato.setEmail(email);
+                                    contatosArrayList.add(contato);
+                                }
+                            }
+                            cur1.close();
+                        }
+                    }
+                    hideProgressDialog();
+                }
+            }).start();
+        }
+    }
+    public static ArrayList<Contato> getContatosArrayList(){
+        return contatosArrayList;
+    }
+
+    public void showProgressDialog() {
+        if (mProgressDialog == null) {
+            mProgressDialog = new ProgressDialog(this);
+            mProgressDialog.setCancelable(false);
+            mProgressDialog.setMessage(getString(R.string.carregando));
+        }
+
+        mProgressDialog.show();
+    }
+
+    public void hideProgressDialog() {
+        if (mProgressDialog != null && mProgressDialog.isShowing()) {
+            mProgressDialog.dismiss();
         }
     }
 }
