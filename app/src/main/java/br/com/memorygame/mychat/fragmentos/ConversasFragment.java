@@ -9,14 +9,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 
 import br.com.memorygame.mychat.R;
-import br.com.memorygame.mychat.adapters.ConversasViewHolder;
+import br.com.memorygame.mychat.adapters.AdapterConversa;
 import br.com.memorygame.mychat.models.Contato;
 import br.com.memorygame.mychat.models.Conversa;
 
@@ -26,7 +27,7 @@ import br.com.memorygame.mychat.models.Conversa;
 public class ConversasFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private LinearLayoutManager mLinearLayoutManager;
-    private FirebaseRecyclerAdapter<Conversa,ConversasViewHolder> mAdapter;
+    private AdapterConversa mAdapter;
     private DatabaseReference mDatabaseReference;
     private String meuEmail;
 
@@ -53,19 +54,43 @@ public class ConversasFragment extends Fragment {
         mLinearLayoutManager.setReverseLayout(true);
         mLinearLayoutManager.setStackFromEnd(true);
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
-        Query query = mDatabaseReference.child("conversas");
-        mAdapter = new FirebaseRecyclerAdapter<Conversa, ConversasViewHolder>(Conversa.class,R.layout.item_conversa,ConversasViewHolder.class,query) {
+        mAdapter = new AdapterConversa(getActivity());
+        mDatabaseReference.child("conversas").addChildEventListener(new ChildEventListener() {
             @Override
-            protected void populateViewHolder(ConversasViewHolder viewHolder, Conversa model, int position) {
-                boolean flag = false;
-                for (Contato item:model.getContatoArrayList()) {
-                    if (item.getEmail().equalsIgnoreCase(meuEmail)){
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Conversa conversa = dataSnapshot.getValue(Conversa.class);
+                conversa.setUid(dataSnapshot.getKey());
+                boolean flag=false;
+                for (Contato contato: conversa.getContatoArrayList()) {
+                    if (contato.getEmail().equals(FirebaseAuth.getInstance().getCurrentUser().getEmail())){
                         flag=true;
                     }
                 }
-                viewHolder.bindToConversa(model,flag);
+                if (flag) {
+                    mAdapter.addConversa(conversa);
+                }
             }
-        };
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
         mRecyclerView.setAdapter(mAdapter);
     }
 }

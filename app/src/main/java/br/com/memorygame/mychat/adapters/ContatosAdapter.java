@@ -6,13 +6,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.bumptech.glide.Glide;
+//import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 
 import br.com.memorygame.mychat.R;
 import br.com.memorygame.mychat.models.Contato;
-import br.com.memorygame.mychat.utilitarios.CircleTransform;
+//import br.com.memorygame.mychat.utilitarios.CircleTransform;
 
 /**
  * Created by debo_ on 16/06/2017.
@@ -41,15 +41,15 @@ public class ContatosAdapter extends RecyclerView.Adapter{
         viewHolder.uid=contato.getUid();
         viewHolder.nome.setText(contato.getNome());
         viewHolder.email.setText(contato.getEmail());
-        if (contato.getUrlFoto()!=null) {
-            if (!contato.getUrlFoto().toString().isEmpty()) {
-                Glide.with(contexto).load(contato.getUrlFoto()).transform(new CircleTransform(contexto)).into(viewHolder.foto);
-            } else {
-                viewHolder.iniciais.setText("" + contato.getNome().charAt(0));
-            }
-        }else {
+//        if (contato.getUrlFoto()!=null) {
+//            if (!contato.getUrlFoto().toString().isEmpty()) {
+//                Glide.with(contexto).load(contato.getUrlFoto()).transform(new CircleTransform(contexto)).into(viewHolder.foto);
+//            } else {
+//                viewHolder.iniciais.setText("" + contato.getNome().charAt(0));
+//            }
+//        }else {
             viewHolder.iniciais.setText("" + contato.getNome().charAt(0));
-        }
+//        }
     }
 
     @Override

@@ -1,6 +1,7 @@
 package br.com.memorygame.mychat.models;
 
 import com.google.firebase.database.Exclude;
+import com.google.firebase.database.IgnoreExtraProperties;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,10 +12,14 @@ import java.util.Map;
  * Created by debo_ on 15/06/2017.
  */
 
+@IgnoreExtraProperties
 public class Conversa {
     private String uid;
-    private List<Contato> contatoArrayList = new ArrayList<>();
-    private List<Mensagem> mensagemArrayList = new ArrayList<>();
+    public List<Contato> contatoArrayList = new ArrayList<>();
+    public List<Mensagem> mensagemArrayList = new ArrayList<>();
+
+    public Conversa() {
+    }
 
     public String getUid() {
         return uid;

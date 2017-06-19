@@ -1,6 +1,9 @@
 package br.com.memorygame.mychat.models;
 
+import android.support.annotation.NonNull;
+
 import com.google.firebase.database.Exclude;
+import com.google.firebase.database.IgnoreExtraProperties;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -8,8 +11,8 @@ import java.util.Map;
 /**
  * Created by debo_ on 15/06/2017.
  */
-
-public class Contato {
+@IgnoreExtraProperties
+public class Contato implements Comparable<Contato>{
     private String uid;
     private String email;
     private String nome;
@@ -59,4 +62,8 @@ public class Contato {
         return result;
     }
 
+    @Override
+    public int compareTo(@NonNull Contato contato) {
+        return this.getNome().compareToIgnoreCase(contato.getNome());
+    }
 }

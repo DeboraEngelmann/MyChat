@@ -16,12 +16,8 @@ import br.com.memorygame.mychat.R;
 import br.com.memorygame.mychat.adapters.ContatosAdapter;
 import br.com.memorygame.mychat.models.Contato;
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class ContatosFragment extends Fragment {
     RecyclerView recyclerView;
-    ArrayList<Contato> contatosArrayList;
 
     public ContatosFragment() {
     }
@@ -39,5 +35,6 @@ public class ContatosFragment extends Fragment {
         recyclerView.setLayoutManager(layout);
         return view;
     }
+
 
 }

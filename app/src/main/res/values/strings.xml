@@ -18,6 +18,7 @@
     <string name="nome">Nome</string>
     <string name="email">Email</string>
     <string name="informe_o_nome">Informe seu nome!</string>
+    <string name="empty_message_list">Nenhuma mensagem trocada ainda.</string>
 
 
     <string name="navigation_drawer_open">Open navigation drawer</string>

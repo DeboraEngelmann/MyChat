@@ -1,24 +1,22 @@
 package br.com.memorygame.mychat.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import br.com.memorygame.mychat.MensagemActivity;
 import br.com.memorygame.mychat.R;
 import br.com.memorygame.mychat.models.Contato;
 import br.com.memorygame.mychat.models.Conversa;
@@ -76,6 +74,9 @@ public class ContatosViewHolder extends RecyclerView.ViewHolder implements View.
         Map<String,Object>childUpdates=new HashMap<>();
         childUpdates.put("/conversas/"+key,mapValues);
         mDatabaseReference.updateChildren(childUpdates);
-        Toast.makeText(contexto, "deu certo", Toast.LENGTH_SHORT).show();
+
+        Intent mIntent = new Intent(contexto, MensagemActivity.class);
+        mIntent.putExtra("uidConversa", key);
+        contexto.startActivity(mIntent);
     }
 }

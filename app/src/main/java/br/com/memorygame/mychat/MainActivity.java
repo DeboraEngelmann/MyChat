@@ -28,6 +28,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 
 import br.com.memorygame.mychat.fragmentos.TabFragment;
 import br.com.memorygame.mychat.models.Contato;
@@ -167,33 +169,50 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void getNameEmailDetails(){
+        final String[] PROJECTION = new String[] {
+                ContactsContract.CommonDataKinds.Email.CONTACT_ID,
+                ContactsContract.Contacts.DISPLAY_NAME,
+                ContactsContract.CommonDataKinds.Email.DATA
+        };
+        boolean inserir=true;
         if (contatosArrayList.size()==0) {
             showProgressDialog();
             new Thread(new Runnable() {
                 @Override
                 public void run() {
+                    boolean inserir=true;
+
                     ContentResolver cr = getContentResolver();
-                    Cursor cur = cr.query(ContactsContract.Contacts.CONTENT_URI, null, null, null, null);
-                    if (cur.getCount() > 0) {
-                        while (cur.moveToNext()) {
-                            String id = cur.getString(cur.getColumnIndex(ContactsContract.Contacts._ID));
-                            Cursor cur1 = cr.query(
-                                    ContactsContract.CommonDataKinds.Email.CONTENT_URI, null,null,null, null);
-                            while (cur1.moveToNext()) {
-                                //to get the contact names
-                                String name = cur1.getString(cur1.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
-//                                Log.e("Name :", name);
-                                String email = cur1.getString(cur1.getColumnIndex(ContactsContract.CommonDataKinds.Email.DATA));
-//                                Log.e("Email", email);
-                                if (email != null) {
+                    Cursor cursor = cr.query(ContactsContract.CommonDataKinds.Email.CONTENT_URI, PROJECTION, null, null, null);
+                    if (cursor != null) {
+                        try {
+                            final int contactIdIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Email.CONTACT_ID);
+                            final int displayNameIndex = cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME);
+                            final int emailIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Email.DATA);
+                            long contactId;
+                            String displayName, address;
+                            while (cursor.moveToNext()) {
+                                inserir = true;
+                                contactId = cursor.getLong(contactIdIndex);
+                                displayName = cursor.getString(displayNameIndex);
+                                address = cursor.getString(emailIndex);
+                                if (address != null) {
                                     Contato contato = new Contato();
-                                    contato.setUid(id);
-                                    contato.setNome(name);
-                                    contato.setEmail(email);
-                                    contatosArrayList.add(contato);
+                                    contato.setUid((String.valueOf(contactId)));
+                                    contato.setNome(displayName);
+                                    contato.setEmail(address);
+                                    for (Contato item : contatosArrayList) {
+                                        if (item.getEmail().equals(contato.getEmail())) {
+                                            inserir = false;
+                                        }
+                                    }
+                                    if (inserir) {
+                                        contatosArrayList.add(contato);
+                                    }
                                 }
                             }
-                            cur1.close();
+                        } finally {
+                            cursor.close();
                         }
                     }
                     hideProgressDialog();
@@ -202,7 +221,8 @@ public class MainActivity extends AppCompatActivity {
         }
     }
     public static ArrayList<Contato> getContatosArrayList(){
-        return contatosArrayList;
+        Collections.sort(contatosArrayList);
+        return  contatosArrayList;
     }
 
     public void showProgressDialog() {
