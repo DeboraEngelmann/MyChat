@@ -32,76 +32,39 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <EditText
-                android:id="@+id/email"
-                style="@style/Widget.AppCompat.AutoCompleteTextView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:hint="@string/hint_email"
-                android:inputType="textEmailAddress" />
-            <!--android:maxLines="1"-->
-
-        </android.support.design.widget.TextInputLayout>
-
-
-        <android.support.design.widget.TextInputLayout
+        <EditText
+            android:id="@+id/edt2Nome"
+            style="@style/Widget.AppCompat.AutoCompleteTextView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <EditText
-                android:id="@+id/nPassword"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:focusableInTouchMode="true"
-                android:hint="@string/hint_nSenha"
-                android:imeActionId="@+id/login"
-                android:imeOptions="actionUnspecified"
-                android:inputType="textPassword"
-                android:maxLines="1" />
+            android:layout_height="wrap_content"
+            android:hint="@string/hint_apelido"
+            android:inputType="textCapWords|textPersonName"
+            android:maxLines="1" />
 
         </android.support.design.widget.TextInputLayout>
 
 
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <EditText
-                android:id="@+id/confirm_password"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:focusableInTouchMode="true"
-                android:hint="@string/hint_confirm_senha"
-                android:imeActionId="@+id/login"
-                android:imeOptions="actionUnspecified"
-                android:inputType="textPassword"
-                android:maxLines="1" />
-
-        </android.support.design.widget.TextInputLayout>
-
-
-        <!--Layout Button Logiin-->
+        <!--Layout Button Logiin--> <!-- Alterar_dados Button -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
             <!-- LoginActivity Button -->
+            <!-- Alterar_dados Button -->
             <Button
-                android:id="@+id/btn_login"
-                android:layout_width="fill_parent"
+                android:id="@+id/btn_alterar_dados"
+                style="?android:textAppearanceSmall"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="1dp"
-                android:layout_marginTop="20dip"
-                android:layout_weight="1"
+                android:layout_marginTop="16dp"
                 android:background="@color/colorAccent"
-                android:onClick="clickFinish"
-                android:text="@string/btn_login"
+                android:onClick="clickAlterarDados"
+                android:text="@string/btn_alterar_dados"
                 android:textColor="@color/colorPrimaryText"
                 android:textStyle="bold" />
-
         </LinearLayout>
+
     </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>

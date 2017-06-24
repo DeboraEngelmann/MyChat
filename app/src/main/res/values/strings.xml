@@ -17,6 +17,8 @@
     <string name="btn_link_to_login">Voltar para a tela de login</string>
     <string name="nome">Nome</string>
     <string name="email">Email</string>
+    <string name="hint_apelido">Digite o novo nome/apelido</string>
+    <string name="btn_alterar_dados">Alterar dados</string>
     <string name="informe_o_nome">Informe seu nome!</string>
     <string name="empty_message_list">Nenhuma mensagem trocada ainda.</string>
     <string name="hint_nSenha">Digite nova senha</string>
