@@ -40,7 +40,7 @@ import com.google.firebase.database.ValueEventListener;
 import br.com.memorygame.mychat.models.User;
 import br.com.memorygame.mychat.utilitarios.Funcoes;
 
-public class Login extends AppCompatActivity implements View.OnClickListener, GoogleApiClient.OnConnectionFailedListener {
+public class LoginActivity extends AppCompatActivity implements View.OnClickListener, GoogleApiClient.OnConnectionFailedListener {
     private static final String TAG = "SignInActivity";
     private static final int RC_SIGN_IN = 9001;
 
@@ -131,7 +131,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener, Go
 
             case R.id.btn_cadastrar:
                 try {
-                    startActivity(new Intent(Login.this, CadastrarUsuario.class));
+                    startActivity(new Intent(LoginActivity.this, CadastrarUsuarioActivity.class));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -139,7 +139,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener, Go
 
             case R.id.btn_reset_password:
                 try {
-                    startActivity(new Intent(Login.this, RedefinirSenha.class));
+                    startActivity(new Intent(LoginActivity.this, ResetarSenhaActivity.class));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -164,7 +164,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener, Go
 
                     //Autenticar o  usuario
                     mAuth.signInWithEmailAndPassword(email, password)
-                            .addOnCompleteListener(Login.this, new OnCompleteListener<AuthResult>() {
+                            .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
                                 @Override
                                 public void onComplete(@NonNull Task<AuthResult> task) {
                                     // Se o login falhar, exiba uma mensagem para o usuário. Se o login for bem-sucedido
@@ -176,11 +176,11 @@ public class Login extends AppCompatActivity implements View.OnClickListener, Go
                                         if (password.length() < 6) {
                                             inputPassword.setError(getString(R.string.minimum_password));
                                         } else {
-                                            Toast.makeText(Login.this, getString(R.string.auth_failed), Toast.LENGTH_LONG).show();
+                                            Toast.makeText(LoginActivity.this, getString(R.string.auth_failed), Toast.LENGTH_LONG).show();
                                         }
                                     } else {//Caso feliz
                                         hideProgressDialog();
-                                        Intent intent = new Intent(Login.this, MainActivity.class);
+                                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                                         startActivity(intent);
                                         finish();
                                     }
@@ -297,7 +297,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener, Go
 
                             if (!task.isSuccessful()) {
                                 hideProgressDialog();
-                                Toast.makeText(Login.this, "Não foi possvel entrar!", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(LoginActivity.this, "Não foi possvel entrar!", Toast.LENGTH_SHORT).show();
 
                             }
                         }
@@ -322,7 +322,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener, Go
 
 
     private void onAuthSuccess(FirebaseUser user) {
-        startActivity(new Intent(Login.this, MainActivity.class));
+        startActivity(new Intent(LoginActivity.this, MainActivity.class));
         finish();
     }
 

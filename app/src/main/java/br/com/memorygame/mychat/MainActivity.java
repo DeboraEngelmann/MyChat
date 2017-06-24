@@ -23,12 +23,12 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 
 import br.com.memorygame.mychat.fragmentos.TabFragment;
@@ -52,14 +52,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
-                if (user != null) {
-                    // User is signed in
-                    Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
-                } else {
-                    // User is signed out
-                    startActivity(new Intent(MainActivity.this,Login.class));
-                    Log.d(TAG, "onAuthStateChanged:signed_out");
+                if (user == null) {
+                    //se não tem nenhum usuário logado abre a tela de loguin
+                    startActivity(new Intent(MainActivity.this, LoginActivity.class));
                     finish();
+                    Log.d(TAG, "onAuthStateChanged:signed_out:");
+                } else {
+                    Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
                 }
                 // ...
             }
@@ -101,17 +100,25 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
+        // O item da barra de ação de controle é clicado aqui. A barra de ação manipulará automaticamente
+        // os cliques no botão Home / Up, desde que você especifique uma atividade pai no AndroidManifest.xml.
         int id = item.getItemId();
-
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_sair) {
+            signOut();
+            return true;
+        }
+        if (id == R.id.action_trocar_senha) {
+            Toast.makeText(MainActivity.this, getString(R.string.teste_redefinir), Toast.LENGTH_LONG).show();
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    //sign out method
+    public void signOut() {
+        FirebaseAuth.getInstance().signOut();
     }
 
     @Override
@@ -163,6 +170,14 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onStop() {
         super.onStop();
+        if (mAuthListener != null) {
+            mAuth.removeAuthStateListener(mAuthListener);
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
         if (mAuthListener != null) {
             mAuth.removeAuthStateListener(mAuthListener);
         }

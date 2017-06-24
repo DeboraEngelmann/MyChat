@@ -43,7 +43,11 @@ public class ConversasFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_conversas, container, false);
         mRecyclerView = (RecyclerView) view.findViewById(R.id.reciclerViewConversas);
         mDatabaseReference= FirebaseDatabase.getInstance().getReference();
-        meuEmail=FirebaseAuth.getInstance().getCurrentUser().getEmail();
+        if (FirebaseAuth.getInstance()!=null){
+            if (FirebaseAuth.getInstance().getCurrentUser()!=null) {
+                meuEmail = FirebaseAuth.getInstance().getCurrentUser().getEmail();
+            }
+        }
         return view;
     }
 

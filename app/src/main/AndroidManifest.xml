@@ -19,13 +19,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Login" />
-        <activity android:name=".CadastrarUsuario" />
-        <activity android:name=".RedefinirSenha" />
+        <activity android:name=".LoginActivity" />
+        <activity android:name=".CadastrarUsuarioActivity" />
+        <activity android:name=".AlterarDadosActivity" />
         <activity
             android:name=".CadastroContato"
             android:theme="@style/DialogTheme" />
-        <activity android:name=".MensagemActivity"></activity>
+        <activity android:name=".MensagemActivity" />
+        <activity android:name=".ResetarSenhaActivity"></activity>
     </application>
 
 </manifest>

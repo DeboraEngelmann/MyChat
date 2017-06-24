@@ -22,7 +22,7 @@ import com.google.firebase.database.ValueEventListener;
 import br.com.memorygame.mychat.models.User;
 import br.com.memorygame.mychat.utilitarios.Funcoes;
 
-public class CadastrarUsuario extends AppCompatActivity {
+public class CadastrarUsuarioActivity extends AppCompatActivity {
     private EditText inputEmail, inputPassword, inputPasswordConfirm, edtNome;
     private FirebaseAuth auth;
     private DatabaseReference mDatabase;
@@ -86,24 +86,24 @@ public class CadastrarUsuario extends AppCompatActivity {
         if (!editando && FirebaseAuth.getInstance().getCurrentUser() == null) {
             //create user
             auth.createUserWithEmailAndPassword(email, password)
-                    .addOnCompleteListener(CadastrarUsuario.this, new OnCompleteListener<AuthResult>() {
+                    .addOnCompleteListener(CadastrarUsuarioActivity.this, new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             showProgressDialog();
                             if (!task.isSuccessful()) {
                                 hideProgressDialog();
                                 if (task.getException().getMessage().toString().equalsIgnoreCase("The email address is badly formatted.")){
-                                    Toast.makeText(CadastrarUsuario.this, "Endereço de e-mail invalido",
+                                    Toast.makeText(CadastrarUsuarioActivity.this, "Endereço de e-mail invalido",
                                             Toast.LENGTH_SHORT).show();
                                 } else {
-                                    Toast.makeText(CadastrarUsuario.this, "Já existe um usuário cadastrado com esse e-mail",
+                                    Toast.makeText(CadastrarUsuarioActivity.this, "Já existe um usuário cadastrado com esse e-mail",
                                             Toast.LENGTH_SHORT).show();
                                 }
 
                             } else {
                                 mUsuario.setUid(FirebaseAuth.getInstance().getCurrentUser().getUid());
                                 adicionarUsuario();
-                                startActivity(new Intent(CadastrarUsuario.this, MainActivity.class));
+                                startActivity(new Intent(CadastrarUsuarioActivity.this, MainActivity.class));
                                 finish();
                             }
                         }
