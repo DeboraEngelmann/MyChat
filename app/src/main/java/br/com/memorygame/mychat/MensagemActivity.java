@@ -9,21 +9,14 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 import br.com.memorygame.mychat.adapters.MensagemViewHolder;
 import br.com.memorygame.mychat.models.Mensagem;
-import br.com.memorygame.mychat.models.User;
 import br.com.memorygame.mychat.utilitarios.Funcoes;
 
 public class MensagemActivity extends AppCompatActivity {
@@ -68,7 +61,6 @@ public class MensagemActivity extends AppCompatActivity {
             }
         };
         mRecycler.setAdapter(mAdapter);
-
     }
 
     @Override
@@ -77,6 +69,7 @@ public class MensagemActivity extends AppCompatActivity {
 
     }
 
+    //Listner implementado na view
     public void addMensagem(View v){
         Mensagem mensagem = new Mensagem();
         mensagem.setNome(MainActivity.usuario.getNome());

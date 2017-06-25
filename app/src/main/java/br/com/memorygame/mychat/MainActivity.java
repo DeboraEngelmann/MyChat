@@ -10,20 +10,14 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -57,11 +51,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         mAuth = FirebaseAuth.getInstance();
         mAuthListener = new FirebaseAuth.AuthStateListener() {
-            @Override
+            @Override //inicializa a instancia do firebaseAuth para testar se existe ou não um usuario
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user == null) {
-                    //se não tem nenhum usuário logado abre a tela de loguin
+                    //se não tem nenhum usuário logado abre a tela de login
                     startActivity(new Intent(MainActivity.this, LoginActivity.class));
                     finish();
                     Log.d(TAG, "onAuthStateChanged:signed_out:");
@@ -80,23 +74,14 @@ public class MainActivity extends AppCompatActivity {
             mDatabaseUsuario = FirebaseDatabase.getInstance().getReference().child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
         }
 
-
+        //Gerencia a troca de conteúdo dos fragmentos (tabs)
         FM= getSupportFragmentManager();
         FT= FM.beginTransaction();
         FT.replace(R.id.containerView, new TabFragment()).commit();
 
     }
 
-    @Override
-    public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
-    }
-
+    //Pega o menu que é colocado na toolbar
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -104,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    @Override
+    @Override //ouvinte de clique do menu
     public boolean onOptionsItemSelected(MenuItem item) {
         // O item da barra de ação de controle é clicado aqui. A barra de ação manipulará automaticamente
         // os cliques no botão Home / Up, desde que você especifique uma atividade pai no AndroidManifest.xml.
@@ -119,7 +104,6 @@ public class MainActivity extends AppCompatActivity {
             startActivity(alterarDados);
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -130,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onStart() {
-        super.onStart();
+        super.onStart(); //verifica se tem permissão para ler contatos, se não tem, pede permissão
         mAuth.addAuthStateListener(mAuthListener);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_CONTACTS}, MY_PERMISSIONS_REQUEST_READ_CONTACTS);
@@ -139,16 +123,16 @@ public class MainActivity extends AppCompatActivity {
         } else {
             //Ler os contatos
             getNameEmailDetails();
-
             Log.i(TAG, "Já tem permissão ao usuário");
         }
+
+        //pega usuario do banco
         if (mDatabaseUsuario!=null) {
             mDatabaseUsuario.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     usuario = dataSnapshot.getValue(User.class);
                 }
-
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
 
@@ -186,7 +170,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
     @Override
     public void onStop() {
         super.onStop();
@@ -209,14 +192,12 @@ public class MainActivity extends AppCompatActivity {
                 ContactsContract.Contacts.DISPLAY_NAME,
                 ContactsContract.CommonDataKinds.Email.DATA
         };
-        boolean inserir=true;
         if (contatosArrayList.size()==0) {
             showProgressDialog();
             new Thread(new Runnable() {
                 @Override
                 public void run() {
                     boolean inserir=true;
-
                     ContentResolver cr = getContentResolver();
                     Cursor cursor = cr.query(ContactsContract.CommonDataKinds.Email.CONTENT_URI, PROJECTION, null, null, null);
                     if (cursor != null) {
@@ -266,7 +247,6 @@ public class MainActivity extends AppCompatActivity {
             mProgressDialog.setCancelable(false);
             mProgressDialog.setMessage(getString(R.string.carregando));
         }
-
         mProgressDialog.show();
     }
 

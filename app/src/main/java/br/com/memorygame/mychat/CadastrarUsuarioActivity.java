@@ -26,7 +26,6 @@ public class CadastrarUsuarioActivity extends AppCompatActivity {
     private EditText inputEmail, inputPassword, inputPasswordConfirm, edtNome;
     private FirebaseAuth auth;
     private DatabaseReference mDatabase;
-    private boolean editando;
     User mUsuario;
     private ProgressDialog mProgressDialog;
 
@@ -39,24 +38,9 @@ public class CadastrarUsuarioActivity extends AppCompatActivity {
         }else{
             mDatabase = FirebaseDatabase.getInstance().getReference().child("users");
         }
-        //Get Firebase auth instance
+        mUsuario = User.getInstancia();
         auth = FirebaseAuth.getInstance();
         recuperacomponentes();
-        mUsuario = User.getInstancia();
-        if (mUsuario.getEmail()!=null){
-            recuperarDadosDoUsuarioParaComponentes();
-            editando =true;
-        }
-        //Nothing special, create database reference.
-        DatabaseReference database = FirebaseDatabase.getInstance().getReference();
-    }
-
-    private void recuperarDadosDoUsuarioParaComponentes() {
-        findViewById(R.id.layout_email).setVisibility(View.GONE);
-        findViewById(R.id.layout_senha).setVisibility(View.GONE);
-        findViewById(R.id.layout_confirmar_senha).setVisibility(View.GONE);
-        findViewById(R.id.sign_in_button).setVisibility(View.GONE);
-        edtNome.setText(mUsuario.getNome());
     }
 
     private void recuperacomponentes() {
@@ -83,7 +67,7 @@ public class CadastrarUsuarioActivity extends AppCompatActivity {
         mUsuario.setNome(edtNome.getText().toString());
         mUsuario.setEmail(email);
 
-        if (!editando && FirebaseAuth.getInstance().getCurrentUser() == null) {
+        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
             //create user
             auth.createUserWithEmailAndPassword(email, password)
                     .addOnCompleteListener(CadastrarUsuarioActivity.this, new OnCompleteListener<AuthResult>() {
@@ -99,7 +83,6 @@ public class CadastrarUsuarioActivity extends AppCompatActivity {
                                     Toast.makeText(CadastrarUsuarioActivity.this, "Já existe um usuário cadastrado com esse e-mail",
                                             Toast.LENGTH_SHORT).show();
                                 }
-
                             } else {
                                 mUsuario.setUid(FirebaseAuth.getInstance().getCurrentUser().getUid());
                                 adicionarUsuario();
@@ -118,18 +101,18 @@ public class CadastrarUsuarioActivity extends AppCompatActivity {
         boolean ret = true;
         if (!Funcoes.validateNotNull(edtNome, getString(R.string.informe_o_nome))){
             ret =  false;
-        }else if (!editando && !Funcoes.validateNotNull(inputEmail, getString(R.string.val_email_empty))){
+        }else if (!Funcoes.validateNotNull(inputEmail, getString(R.string.val_email_empty))){
             ret = false;
-        }else if (!editando && !Funcoes.validateNotNull(inputPassword, getString(R.string.val_senha_empty))){
+        }else if (!Funcoes.validateNotNull(inputPassword, getString(R.string.val_senha_empty))){
             ret =  false;
-        }else if (!editando && !Funcoes.validateNotNull(inputPasswordConfirm, getString(R.string.val_confirm_senha_empty))){
+        }else if (!Funcoes.validateNotNull(inputPasswordConfirm, getString(R.string.val_confirm_senha_empty))){
             ret =  false;
-        }else if (inputPassword.getText().length() < 6 && !editando ) {
+        }else if (inputPassword.getText().length() < 6) {
             inputPassword.setError("A senha deve ter no minimo 6 Caracteres");
             inputPassword.setFocusable(true);
             inputPassword.requestFocus();
             ret = false;
-        }else if (!editando && !inputPassword.getText().toString().equals(inputPasswordConfirm.getText().toString())){
+        }else if (!inputPassword.getText().toString().equals(inputPasswordConfirm.getText().toString())){
             inputPasswordConfirm.setError("As senhas não correspondem!");
             inputPasswordConfirm.setFocusable(true);
             inputPasswordConfirm.requestFocus();
@@ -151,15 +134,13 @@ public class CadastrarUsuarioActivity extends AppCompatActivity {
     }
 
     private void adicionarUsuario() {
-        mDatabase.addValueEventListener(new ValueEventListener() {
+        mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 mDatabase.child(mUsuario.getUid()).setValue(mUsuario.toMap());
             }
-
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
             }
         });
 
@@ -174,7 +155,6 @@ public class CadastrarUsuarioActivity extends AppCompatActivity {
             mProgressDialog.setCancelable(false);
             mProgressDialog.setMessage(getString(R.string.carregando));
         }
-
         mProgressDialog.show();
     }
 
@@ -183,5 +163,4 @@ public class CadastrarUsuarioActivity extends AppCompatActivity {
             mProgressDialog.dismiss();
         }
     }
-
 }

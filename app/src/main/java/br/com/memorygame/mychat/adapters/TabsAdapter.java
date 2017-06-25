@@ -9,6 +9,7 @@ import br.com.memorygame.mychat.fragmentos.ConversasFragment;
 
 import static br.com.memorygame.mychat.fragmentos.TabFragment.int_items;
 
+//Gerencia as tabs na mainActivity
 public class TabsAdapter extends FragmentPagerAdapter {
 
     public TabsAdapter(FragmentManager fm)
@@ -38,7 +39,6 @@ public class TabsAdapter extends FragmentPagerAdapter {
             case 1:
                 return "Contatos";
         }
-
         return null;
     }
 }

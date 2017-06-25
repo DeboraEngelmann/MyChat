@@ -3,7 +3,6 @@ package br.com.memorygame.mychat.models;
 import com.google.firebase.database.Exclude;
 import com.google.firebase.database.IgnoreExtraProperties;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 

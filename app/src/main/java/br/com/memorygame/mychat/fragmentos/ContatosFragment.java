@@ -9,19 +9,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.ArrayList;
-
 import br.com.memorygame.mychat.MainActivity;
 import br.com.memorygame.mychat.R;
 import br.com.memorygame.mychat.adapters.ContatosAdapter;
-import br.com.memorygame.mychat.models.Contato;
 
 public class ContatosFragment extends Fragment {
     RecyclerView recyclerView;
-
+    //Construtor exigido pelo adapter
     public ContatosFragment() {
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -35,6 +31,4 @@ public class ContatosFragment extends Fragment {
         recyclerView.setLayoutManager(layout);
         return view;
     }
-
-
 }

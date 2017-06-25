@@ -27,6 +27,7 @@ public class ConversasViewHolder extends RecyclerView.ViewHolder implements View
     String uidConversa;
     private Context context;
 
+    //Recupera os dados do layout
     public ConversasViewHolder(View itemView) {
         super(itemView);
         context = itemView.getContext();
@@ -37,6 +38,7 @@ public class ConversasViewHolder extends RecyclerView.ViewHolder implements View
         itemView.setOnClickListener(this);
     }
 
+    //metodo responsável por passar os dados para a view sem mecher direto nas variaveis
     public void bindToConversa(Conversa conversa) {
         String meuEmail = FirebaseAuth.getInstance().getCurrentUser().getEmail();
         String titulo = "";
@@ -54,7 +56,7 @@ public class ConversasViewHolder extends RecyclerView.ViewHolder implements View
         uidConversa = conversa.getUid();
     }
 
-    @Override
+    @Override //ouvinte do click listner da view
     public void onClick(View v) {
         Intent mIntent = new Intent(v.getContext(), MensagemActivity.class);
         mIntent.putExtra("uidConversa", uidConversa);

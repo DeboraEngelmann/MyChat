@@ -45,12 +45,12 @@ public class AlterarDadosActivity extends AppCompatActivity implements View.OnCl
     @Override
     protected void onStart() {
         super.onStart();
+        //listener que recupera o usuario (é executado só uma vez)
         mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 usuario = dataSnapshot.getValue(User.class);
             }
-
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
@@ -58,7 +58,7 @@ public class AlterarDadosActivity extends AppCompatActivity implements View.OnCl
         });
     }
 
-    @Override
+    @Override //ouvinte de cliques da view
     public void onClick(View v) {
         if (!Funcoes.validateNotNull(edt2Nome, getString(R.string.informe_o_nome))){
             return;

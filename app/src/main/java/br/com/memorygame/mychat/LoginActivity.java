@@ -2,7 +2,6 @@ package br.com.memorygame.mychat;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -26,7 +25,6 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
@@ -51,7 +49,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private FirebaseAuth mAuth;
     public static GoogleApiClient mGoogleApiClient;
     private User user;
-    private static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 1;
     private ProgressDialog mProgressDialog;
 
     @Override
@@ -96,9 +93,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         FirebaseAuth.AuthStateListener callback = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-
                 FirebaseUser userFirebase = firebaseAuth.getCurrentUser();
-
                 if (userFirebase == null) {
                     hideProgressDialog();
                     return;
@@ -107,18 +102,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     adicionarUsuario();
                     goMainScreen();
                 }
-
-
             }
         };
         return (callback);
-    }
-
-    private boolean isNameOk(User mUsuario, FirebaseUser firebaseUser) {
-        return (
-                mUsuario.getNome() != null
-                        || firebaseUser.getDisplayName() != null
-        );
     }
 
     @Override
@@ -168,7 +154,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                 @Override
                                 public void onComplete(@NonNull Task<AuthResult> task) {
                                     // Se o login falhar, exiba uma mensagem para o usuário. Se o login for bem-sucedido
-                                    // o ouvinte do estado de autenticação será notificado ea lógica para lidar com o
+                                    // o ouvinte do estado de autenticação será notificado e a lógica para lidar com o
                                     // assinado no usuário pode ser manipulado no ouvinte.
                                     hideProgressDialog();
                                     if (!task.isSuccessful()) {
@@ -199,7 +185,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     }
 
-    @Override
+    @Override //recebe a resposta da tela de loguin do google
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == RC_SIGN_IN) {
@@ -217,20 +203,18 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 // ...
             }
         }
-
     }
-
 
     @Override
     protected void onStart() {
         super.onStart();
         if (mAuth.getCurrentUser() != null) {
-            onAuthSuccess(mAuth.getCurrentUser());
+            onAuthSuccess();
         }
 
-        //Firebase
+        //Adiciona o ouvinte do Firebase
         mAuth.addAuthStateListener(mAuthListener);
-        //google
+        //Adiciona o ouvinte do login do google
         OptionalPendingResult<GoogleSignInResult> opr = Auth.GoogleSignInApi.silentSignIn(mGoogleApiClient);
         if (opr.isDone()) {
             GoogleSignInResult result = opr.get();
@@ -259,7 +243,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
-    //google
+    //abre a tela do google para fazer login
     private void signIn() {
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
         startActivityForResult(signInIntent, RC_SIGN_IN);
@@ -270,7 +254,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         super.onStop();
         mAuth.removeAuthStateListener(mAuthListener);
     }
-
+    //vai para a tela inicial
     public void goMainScreen() {
         hideProgressDialog();
         Intent intent = new Intent(this, MainActivity.class);
@@ -281,14 +265,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         Log.d(TAG, "onConnectionFailed:" + connectionResult);
+        //implementar
     }
 
-
-    private void accessLoginData(String provider, String... tokens) {
+    //faz o login utilizando uma credencial - no caso, google
+    private void accessLoginData(String... tokens) {
         if (tokens != null && tokens.length > 0 && tokens[0] != null) {
 
-            AuthCredential credential = FacebookAuthProvider.getCredential(tokens[0]);
-            credential = provider.equalsIgnoreCase("google") ? GoogleAuthProvider.getCredential(tokens[0], null) : credential;
+            AuthCredential credential = GoogleAuthProvider.getCredential(tokens[0], null);
 
             mAuth.signInWithCredential(credential)
                     .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -297,7 +281,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
                             if (!task.isSuccessful()) {
                                 hideProgressDialog();
-                                Toast.makeText(LoginActivity.this, "Não foi possvel entrar!", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(LoginActivity.this, "Não foi possível entrar!", Toast.LENGTH_SHORT).show();
 
                             }
                         }
@@ -314,14 +298,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void accessGoogleLoginData(String accessToken) {
-        accessLoginData(
-                "google",
-                accessToken
-        );
+        accessLoginData(accessToken);
     }
 
 
-    private void onAuthSuccess(FirebaseUser user) {
+    private void onAuthSuccess() {
         startActivity(new Intent(LoginActivity.this, MainActivity.class));
         finish();
     }
@@ -332,38 +313,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             public void onDataChange(DataSnapshot dataSnapshot) {
                 mDatabase.child("users").child(user.getUid()).setValue(user.toMap());
             }
-
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
             }
         });
-
     }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode) {
-            case MY_PERMISSIONS_REQUEST_READ_CONTACTS: {
-
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_DENIED) {
-
-                    // permission was granted, yay! Do the
-                    // contacts-related task you need to do.
-                } else {
-
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
-                    Toast.makeText(this, "Permission denied to read your External storage", Toast.LENGTH_SHORT).show();
-                }
-                return;
-            }
-        }
-    }
-
 
     public void showProgressDialog() {
         if (mProgressDialog == null) {

@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import br.com.memorygame.mychat.MainActivity;
 import br.com.memorygame.mychat.MensagemActivity;
 import br.com.memorygame.mychat.R;
 import br.com.memorygame.mychat.models.Contato;
@@ -34,6 +35,7 @@ public class ContatosViewHolder extends RecyclerView.ViewHolder implements View.
     DatabaseReference mDatabaseReference;
     Context contexto;
 
+    //Recupera os itens do layout
     public ContatosViewHolder(View itemView) {
         super(itemView);
         this.nome = (TextView) itemView.findViewById(R.id.txtNome);
@@ -49,7 +51,6 @@ public class ContatosViewHolder extends RecyclerView.ViewHolder implements View.
     }
 
     private void criarConversa(){
-
         mDatabaseReference=FirebaseDatabase.getInstance().getReference();
         String key = mDatabaseReference.push().getKey();
         String uid = "";
@@ -58,9 +59,11 @@ public class ContatosViewHolder extends RecyclerView.ViewHolder implements View.
         if (FirebaseAuth.getInstance().getCurrentUser()!=null){
             Contato meuContato = new Contato();
             meuContato.setUid(FirebaseAuth.getInstance().getCurrentUser().getUid());
-            meuContato.setNome(FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
+            meuContato.setNome(MainActivity.usuario.getNome());
             meuContato.setEmail(FirebaseAuth.getInstance().getCurrentUser().getEmail());
-            meuContato.setUrl_photo(FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl().toString());
+            if (FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl()!=null) {
+                meuContato.setUrl_photo(FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl().toString());
+            }
             contatoArrayList.add(meuContato);
         }
         Contato contato = new Contato();
@@ -69,12 +72,13 @@ public class ContatosViewHolder extends RecyclerView.ViewHolder implements View.
         contato.setEmail(email.getText().toString());
         contatoArrayList.add(contato);
         conversa.setContato_array_list(contatoArrayList);
+        //faz mapeamento dos campos para o objeto
         Map<String,Object>mapValues=conversa.toMap();
-
+        //faz mapeamento para colocar um objeto dentro de um filho com a key recuperada anteriormente
         Map<String,Object>childUpdates=new HashMap<>();
         childUpdates.put("/conversas/"+key,mapValues);
         mDatabaseReference.updateChildren(childUpdates);
-
+        //Abre uma tela de mansagem passando o key
         Intent mIntent = new Intent(contexto, MensagemActivity.class);
         mIntent.putExtra("uidConversa", key);
         contexto.startActivity(mIntent);

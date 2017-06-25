@@ -2,20 +2,12 @@ package br.com.memorygame.mychat.adapters;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
-import com.bumptech.glide.util.Util;
-import com.google.firebase.auth.FirebaseAuth;
-
-import java.util.Date;
 
 import br.com.memorygame.mychat.MainActivity;
 import br.com.memorygame.mychat.R;
 import br.com.memorygame.mychat.models.Mensagem;
-import br.com.memorygame.mychat.models.User;
-import br.com.memorygame.mychat.utilitarios.Funcoes;
 
 /**
  * Created by debo_ on 18/06/2017.
@@ -31,6 +23,7 @@ public class MensagemViewHolder extends RecyclerView.ViewHolder {
     RelativeLayout containerLeft;
     RelativeLayout containerRight;
 
+    //recupera os dados do layout
     public MensagemViewHolder(View itemView) {
         super(itemView);
         autorLeft = (TextView) itemView.findViewById(R.id.autor_left);
@@ -41,10 +34,9 @@ public class MensagemViewHolder extends RecyclerView.ViewHolder {
         timeRight=(TextView) itemView.findViewById(R.id.time_right);
         containerLeft=(RelativeLayout) itemView.findViewById(R.id.container_left);
         containerRight=(RelativeLayout) itemView.findViewById(R.id.container_right);
-
     }
 
-
+    //método responsável por colocar os dados na view
     public void bindToMensagem(Mensagem model) {
         if (model.getNome().equalsIgnoreCase(MainActivity.usuario.getNome())){
             containerRight.setVisibility(View.VISIBLE);
@@ -59,7 +51,5 @@ public class MensagemViewHolder extends RecyclerView.ViewHolder {
             timeLeft.setText(model.getData_hora());
             mensagemLeft.setText(model.getMensagem());
         }
-
     }
-
 }

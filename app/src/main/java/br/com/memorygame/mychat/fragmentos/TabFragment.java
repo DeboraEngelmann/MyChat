@@ -19,13 +19,10 @@ public class TabFragment extends Fragment {
     public  static TabLayout mTabLayout;
     public  static ViewPager viewPager;
     public  static int int_items= 2;
-    AppBarLayout mAppBarLayout;
-
 
     public TabFragment() {
         // Required empty public constructor
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -41,15 +38,13 @@ public class TabFragment extends Fragment {
         mTabLayout.setupWithViewPager(viewPager);
         mTabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
         mTabLayout.setTabMode(TabLayout.MODE_FIXED);
-
+        //Pra trocar a pagina da tab é necessário executar uma thread para não dar a sensação de travamento para o usuario
         mTabLayout.post(new Runnable() {
             @Override
             public void run() {
                 mTabLayout.setupWithViewPager(viewPager);
             }
         });
-
         return v;
     }
-
 }
