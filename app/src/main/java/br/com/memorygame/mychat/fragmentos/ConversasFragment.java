@@ -65,7 +65,7 @@ public class ConversasFragment extends Fragment {
                 Conversa conversa = dataSnapshot.getValue(Conversa.class);
                 conversa.setUid(dataSnapshot.getKey());
                 boolean flag=false;
-                for (Contato contato: conversa.getContatoArrayList()) {
+                for (Contato contato: conversa.getContato_array_list()) {
                     if (contato.getEmail().equals(FirebaseAuth.getInstance().getCurrentUser().getEmail())){
                         flag=true;
                     }

@@ -59,7 +59,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:background="@color/colorAccent"
-                android:onClick="clickAlterarDados"
                 android:text="@string/btn_alterar_dados"
                 android:textColor="@color/colorPrimaryText"
                 android:textStyle="bold" />

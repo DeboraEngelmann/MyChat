@@ -15,7 +15,7 @@ public class User {
     private String uid;
     private String email;
     private String nome;
-    private String urlFoto;
+    private String url_photo;
 
     public User() {
     }
@@ -51,20 +51,21 @@ public class User {
         this.nome = nome;
     }
 
-    public String getUrlFoto() {
-        return urlFoto;
-    }
-
-    public void setUrlFoto(String urlFoto) {
-        this.urlFoto = urlFoto;
-    }
     @Exclude
     public Map<String, Object> toMap() {
         HashMap<String, Object> result = new HashMap<>();
         result.put("uid", uid);
-        result.put("name", nome);
+        result.put("nome", nome);
         result.put("email", email);
-        result.put("url_photo",urlFoto);
+        result.put("url_photo",url_photo);
         return result;
+    }
+
+    public String getUrl_photo() {
+        return url_photo;
+    }
+
+    public void setUrl_photo(String url_photo) {
+        this.url_photo = url_photo;
     }
 }

@@ -27,12 +27,18 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Collections;
 
 import br.com.memorygame.mychat.fragmentos.TabFragment;
 import br.com.memorygame.mychat.models.Contato;
+import br.com.memorygame.mychat.models.User;
 
 public class MainActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
@@ -43,6 +49,8 @@ public class MainActivity extends AppCompatActivity {
     private static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 10;
     private static ArrayList<Contato> contatosArrayList = new ArrayList<>();
     private ProgressDialog mProgressDialog;
+    public static User usuario;
+    private DatabaseReference mDatabaseUsuario;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,18 +75,16 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        usuario = User.getInstancia();
+        if (FirebaseAuth.getInstance().getCurrentUser()!=null) {
+            mDatabaseUsuario = FirebaseDatabase.getInstance().getReference().child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        }
+
+
         FM= getSupportFragmentManager();
         FT= FM.beginTransaction();
         FT.replace(R.id.containerView, new TabFragment()).commit();
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
     }
 
     @Override
@@ -108,8 +114,9 @@ public class MainActivity extends AppCompatActivity {
             signOut();
             return true;
         }
-        if (id == R.id.action_trocar_senha) {
-            Toast.makeText(MainActivity.this, getString(R.string.teste_redefinir), Toast.LENGTH_LONG).show();
+        if (id == R.id.action_alterar_dados) {
+            Intent alterarDados = new Intent(this,AlterarDadosActivity.class);
+            startActivity(alterarDados);
             return true;
         }
 
@@ -134,6 +141,19 @@ public class MainActivity extends AppCompatActivity {
             getNameEmailDetails();
 
             Log.i(TAG, "Já tem permissão ao usuário");
+        }
+        if (mDatabaseUsuario!=null) {
+            mDatabaseUsuario.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    usuario = dataSnapshot.getValue(User.class);
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
         }
     }
 

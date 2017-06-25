@@ -11,8 +11,10 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.Date;
 
+import br.com.memorygame.mychat.MainActivity;
 import br.com.memorygame.mychat.R;
 import br.com.memorygame.mychat.models.Mensagem;
+import br.com.memorygame.mychat.models.User;
 import br.com.memorygame.mychat.utilitarios.Funcoes;
 
 /**
@@ -42,18 +44,19 @@ public class MensagemViewHolder extends RecyclerView.ViewHolder {
 
     }
 
+
     public void bindToMensagem(Mensagem model) {
-        if (model.getNome().equals(FirebaseAuth.getInstance().getCurrentUser().getDisplayName())){
+        if (model.getNome().equalsIgnoreCase(MainActivity.usuario.getNome())){
             containerRight.setVisibility(View.VISIBLE);
             containerLeft.setVisibility(View.GONE);
             autorRight.setText(model.getNome());
-            timeRight.setText(Funcoes.dateToString(model.getDataHora()));
+            timeRight.setText(model.getData_hora());
             mensagemRight.setText(model.getMensagem());
         }else {
             containerLeft.setVisibility(View.VISIBLE);
             containerRight.setVisibility(View.GONE);
             autorLeft.setText(model.getNome());
-            timeLeft.setText(Funcoes.dateToString(model.getDataHora()));
+            timeLeft.setText(model.getData_hora());
             mensagemLeft.setText(model.getMensagem());
         }
 

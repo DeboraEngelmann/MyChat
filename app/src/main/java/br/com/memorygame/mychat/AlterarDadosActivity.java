@@ -3,111 +3,72 @@ package br.com.memorygame.mychat;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import br.com.memorygame.mychat.models.User;
+import br.com.memorygame.mychat.utilitarios.Funcoes;
 
-public class AlterarDadosActivity extends AppCompatActivity {
+public class AlterarDadosActivity extends AppCompatActivity implements View.OnClickListener {
     private EditText edt2Nome;
+    private Button btnAlterar;
+    private User usuario;
 
     private FirebaseAuth.AuthStateListener mAuthListener;
     private DatabaseReference mDatabase;
     private FirebaseAuth mAuth;
     private User user;
 
-
-//    onCreate(): executado logo antes de a Activity ser exibida na tela.
-//    Aqui você pode adicionar configurações que devem acontecer antes de
-//    o usuário ter uma impressão visual da Activity.
+    //    onCreate(): executado logo antes de a Activity ser exibida na tela.
+    //    Aqui você pode adicionar configurações que devem acontecer antes de
+    //    o usuário ter uma impressão visual da Activity.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //        mAuth = FirebaseAuth.getInstance();
-                setContentView(R.layout.activity_alterar_dados);
+        if (FirebaseAuth.getInstance().getCurrentUser()!=null) {
+            mDatabase = FirebaseDatabase.getInstance().getReference().child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        }
+        setContentView(R.layout.activity_alterar_dados);
+        edt2Nome = (EditText) findViewById(R.id.edt2Nome);
+        btnAlterar=(Button) findViewById(R.id.btn_alterar_dados);
+        btnAlterar.setOnClickListener(this);
     }
 
-            @Override
+    @Override
     protected void onStart() {
-                super.onStart();
-                if (mAuth.getCurrentUser() != null) {
-                        onAuthSuccess(mAuth.getCurrentUser());
-                    }
-                //Firebase
-                        mAuth.addAuthStateListener(mAuthListener);
-            }
-            private void onAuthSuccess(FirebaseUser user) {
-        //        startActivity(new Intent(LoginActivity.this, MainActivity.class));
-                        finish();
-            }
-            private void adicionarUsuario() {
-                mDatabase.addValueEventListener(new ValueEventListener() {
+        super.onStart();
+        mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                                mDatabase.child("users").child(user.getUid()).setValue(user.toMap());
-                            }
-                    @Override
+                usuario = dataSnapshot.getValue(User.class);
+            }
+
+            @Override
             public void onCancelled(DatabaseError databaseError) {
 
-                                    }
+            }
         });
-                    }
-
-
-    private void AlterarDados() {
-        edt2Nome = (EditText) findViewById(R.id.edt2Nome);
     }
 
-    public void clickAlterarDados(View view) {
-        AlterarDados();
+    @Override
+    public void onClick(View v) {
+        if (!Funcoes.validateNotNull(edt2Nome, getString(R.string.informe_o_nome))){
+            return;
+        }
+        if (usuario!=null){
+            usuario.setNome(edt2Nome.getText().toString());
+            mDatabase.updateChildren(usuario.toMap());
+            Toast.makeText(this, "Dados Alterados com sucesso!", Toast.LENGTH_SHORT).show();
+            finish();
+        }
     }
-
-//    ====================================================================================
-//    As Activities são componentes que permitem a apresentação de uma tela ao usuário.
-//    Elas contém descrições de todos os componentes apresentados, como botões, texto,
-//    imagens, vídeos, enfim, todos os elementos exibidos na tela.
-//    ====================================================================================
-
-
-    //EXEMPLO INTERNET - https://firebase.google.com/docs/database/android/save-data?hl=pt-br
-        //    private void onStarClicked(DatabaseReference postRef) {
-        //        postRef.runTransaction(new Transaction.Handler() {
-        //            @Override
-        //            public Transaction.Result doTransaction(MutableData mutableData) {
-        //                Post p = mutableData.getValue(Post.class);
-        //                if (p == null) {
-        //                    return Transaction.success(mutableData);
-        //                }
-        //
-        //                if (p.stars.containsKey(getUid())) {
-        //                    // Unstar the post and remove self from stars
-        //                    p.starCount = p.starCount - 1;
-        //                    p.stars.remove(getUid());
-        //                } else {
-        //                    // Star the post and add self to stars
-        //                    p.starCount = p.starCount  1;
-        //                    p.stars.put(getUid(), true);
-        //                }
-        //
-        //                // Set value and report transaction success
-        //                mutableData.setValue(p);
-        //                return Transaction.success(mutableData);
-        //            }
-        //
-        //            @Override
-        //            public void onComplete(DatabaseError databaseError, boolean b,
-        //                                   DataSnapshot dataSnapshot) {
-        //                // Transaction completed
-        //                Log.d(TAG, "postTransaction:onComplete:"  databaseError);
-        //            }
-        //        });
-        //    }
-
 }
 

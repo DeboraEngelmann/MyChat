@@ -35,7 +35,7 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_sair">Sair</string>
-    <string name="action_trocar_senha">Trocar Senha</string>
+    <string name="action_alterar_dados">Alterar dados</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notificaçoes</string>
 

@@ -1,3 +1,4 @@
+
 package br.com.memorygame.mychat.models;
 
 import com.google.firebase.database.Exclude;
@@ -14,11 +15,20 @@ import java.util.Map;
 
 @IgnoreExtraProperties
 public class Conversa {
-    private String uid;
-    public List<Contato> contatoArrayList = new ArrayList<>();
-    public List<Mensagem> mensagemArrayList = new ArrayList<>();
+    public String uid;
+    public List<Contato> contato_array_list = new ArrayList<>();
+    public List<Mensagem> mensagem_array_list = new ArrayList<>();
 
     public Conversa() {
+    }
+
+    @Exclude
+    public Map<String, Object> toMap() {
+        HashMap<String, Object> result = new HashMap<>();
+        result.put("uid", uid);
+        result.put("contato_array_list", contato_array_list);
+        result.put("mensagem_array_list", mensagem_array_list);
+        return result;
     }
 
     public String getUid() {
@@ -29,27 +39,20 @@ public class Conversa {
         this.uid = uid;
     }
 
-    public List<Contato> getContatoArrayList() {
-        return contatoArrayList;
+
+    public List<Mensagem> getMensagem_array_list() {
+        return mensagem_array_list;
     }
 
-    public void setContatoArrayList(List<Contato> contatoArrayList) {
-        this.contatoArrayList = contatoArrayList;
+    public void setMensagem_array_list(List<Mensagem> mensagem_array_list) {
+        this.mensagem_array_list = mensagem_array_list;
     }
 
-    public List<Mensagem> getMensagemArrayList() {
-        return mensagemArrayList;
+    public List<Contato> getContato_array_list() {
+        return contato_array_list;
     }
 
-    public void setMensagemArrayList(List<Mensagem> mensagemArrayList) {
-        this.mensagemArrayList = mensagemArrayList;
-    }
-    @Exclude
-    public Map<String, Object> toMap() {
-        HashMap<String, Object> result = new HashMap<>();
-        result.put("uid", uid);
-        result.put("contatoArrayList", contatoArrayList);
-        result.put("mensagemArrayList", mensagemArrayList);
-        return result;
+    public void setContato_array_list(List<Contato> contato_array_list) {
+        this.contato_array_list = contato_array_list;
     }
 }

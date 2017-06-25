@@ -60,7 +60,7 @@ public class ContatosViewHolder extends RecyclerView.ViewHolder implements View.
             meuContato.setUid(FirebaseAuth.getInstance().getCurrentUser().getUid());
             meuContato.setNome(FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
             meuContato.setEmail(FirebaseAuth.getInstance().getCurrentUser().getEmail());
-            meuContato.setUrlFoto(FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl().toString());
+            meuContato.setUrl_photo(FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl().toString());
             contatoArrayList.add(meuContato);
         }
         Contato contato = new Contato();
@@ -68,7 +68,7 @@ public class ContatosViewHolder extends RecyclerView.ViewHolder implements View.
         contato.setNome(nome.getText().toString());
         contato.setEmail(email.getText().toString());
         contatoArrayList.add(contato);
-        conversa.setContatoArrayList(contatoArrayList);
+        conversa.setContato_array_list(contatoArrayList);
         Map<String,Object>mapValues=conversa.toMap();
 
         Map<String,Object>childUpdates=new HashMap<>();

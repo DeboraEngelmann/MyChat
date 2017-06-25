@@ -210,7 +210,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 user.setEmail(account.getEmail());
                 user.setNome(account.getGivenName() + " " + account.getFamilyName());
                 user.setUid(account.getId());
-                user.setUrlFoto(account.getPhotoUrl().toString());
+                user.setUrl_photo(account.getPhotoUrl().toString());
                 accessGoogleLoginData(account.getIdToken());
             } else {
                 // Google Sign In failed, update UI appropriately

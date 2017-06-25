@@ -16,7 +16,7 @@ public class Contato implements Comparable<Contato>{
     private String uid;
     private String email;
     private String nome;
-    private String urlFoto;
+    private String url_photo;
 
     public Contato() {
     }
@@ -45,25 +45,26 @@ public class Contato implements Comparable<Contato>{
         this.nome = nome;
     }
 
-    public String getUrlFoto() {
-        return urlFoto;
-    }
-
-    public void setUrlFoto(String urlFoto) {
-        this.urlFoto = urlFoto;
-    }
     @Exclude
     public Map<String, Object> toMap() {
         HashMap<String, Object> result = new HashMap<>();
         result.put("uid", uid);
-        result.put("name", nome);
+        result.put("nome", nome);
         result.put("email", email);
-        result.put("url_photo",urlFoto);
+        result.put("url_photo",url_photo);
         return result;
     }
 
     @Override
     public int compareTo(@NonNull Contato contato) {
         return this.getNome().compareToIgnoreCase(contato.getNome());
+    }
+
+    public String getUrl_photo() {
+        return url_photo;
+    }
+
+    public void setUrl_photo(String url_photo) {
+        this.url_photo = url_photo;
     }
 }

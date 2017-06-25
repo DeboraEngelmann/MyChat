@@ -7,8 +7,8 @@
         android:title="@string/action_sair"
         app:showAsAction="never"/>
     <item
-        android:id="@+id/action_trocar_senha"
+        android:id="@+id/action_alterar_dados"
         android:orderInCategory="200"
-        android:title="@string/action_trocar_senha"
+        android:title="@string/action_alterar_dados"
         app:showAsAction="never"/>
 </menu>

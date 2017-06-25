@@ -15,9 +15,21 @@ public class Mensagem {
     private String uid;
     private String nome;
     private String mensagem;
-    private Date dataHora;
+    private String data_hora;
 
     public Mensagem() {
+    }
+
+
+
+    @Exclude
+    public Map<String, Object> toMap() {
+        HashMap<String, Object> result = new HashMap<>();
+        result.put("uid", uid);
+        result.put("nome", nome);
+        result.put("mensagem", mensagem);
+        result.put("data_hora", data_hora);
+        return result;
     }
 
     public String getUid() {
@@ -44,20 +56,11 @@ public class Mensagem {
         this.mensagem = mensagem;
     }
 
-    @Exclude
-    public Map<String, Object> toMap() {
-        HashMap<String, Object> result = new HashMap<>();
-        result.put("uid", uid);
-        result.put("nome", nome);
-        result.put("mensagem", mensagem);
-        return result;
+    public String getData_hora() {
+        return data_hora;
     }
 
-    public Date getDataHora() {
-        return dataHora;
-    }
-
-    public void setDataHora(Date dataHora) {
-        this.dataHora = dataHora;
+    public void setData_hora(String data_hora) {
+        this.data_hora = data_hora;
     }
 }
